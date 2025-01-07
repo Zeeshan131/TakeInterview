@@ -1,0 +1,253 @@
+DSA asked
+
+1. Description: 
+Given an array, rotate it to the right by k steps, where k is non-negative.
+
+Example:
+
+Input: nums = [1,2,3,4,5,6,7], k = 3
+Output: [5,6,7,1,2,3,4]
+
+(Feedback: Wrong code)
+
+
+Sol.
+
+public class Solution
+{
+    public void Rotate(int[] nums, int k)
+    {
+        int n = nums.Length;
+        k = k % n;  // In case k is larger than the length of the array
+        
+        // Helper method to reverse a portion of the array
+        void Reverse(int start, int end)
+        {
+            while (start < end)
+            {
+                int temp = nums[start];
+                nums[start] = nums[end];
+                nums[end] = temp;
+                start++;
+                end--;
+            }
+        }
+        
+        // Reverse the entire array
+        Reverse(0, n - 1);
+        // Reverse the first k elements
+        Reverse(0, k - 1);
+        // Reverse the rest of the array
+        Reverse(k, n - 1);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        int[] nums = {1, 2, 3, 4, 5, 6, 7};
+        int k = 3;
+        
+        Solution solution = new Solution();
+        solution.Rotate(nums, k);
+        
+        Console.WriteLine(string.Join(", ", nums));  // Output: 5, 6, 7, 1, 2, 3, 4
+    }
+}
+
+Explanation:
+Reverse Method: The Reverse method reverses the portion of the array between start and end indices. This is done using a simple swap operation within a while loop.
+Rotate Method:
+Normalize k to ensure it is within the bounds of the array length by taking k % n.
+Reverse the entire array.
+Reverse the first k elements to put them in their correct rotated positions.
+Reverse the remaining elements to restore their correct order.
+
+
+
+2. Description (JavaScript)
+You have an array of user objects, and each user object has a `name` and `age`. 
+Write a function to sort the users by age in ascending order and then by name alphabetically if two users have the same age.
+
+   interface User {
+       name: string;
+       age: number;
+   }
+
+   function sortUsers(users: User[]): User[] {
+       return users.sort((a, b) => {
+           if (a.age === b.age) {
+               return a.name.localeCompare(b.name);
+           }
+           return a.age - b.age;
+       });
+   }
+
+
+
+
+
+
+
+Queries asked:
+
+
+
+
+1. Write a query to retrieve duplicate records from a table.
+ANS:
+SELECT EmpID, EmpFname, Department COUNT(*) 
+FROM EmployeeInfo GROUP BY EmpID, EmpFname, Department 
+HAVING COUNT(*) > 1;
+
+2.Write a query to find the third-highest salary from the EmpPosition table.
+SELECT TOP 1 salary
+FROM(
+SELECT TOP 3 salary
+FROM employee_table
+ORDER BY salary DESC) AS emp
+ORDER BY salary ASC;
+
+(Feedback: Correctly Answered)
+
+
+3. Query: Find the Top 3 Products by Sales
+Objective: Retrieve the top 3 products with the highest total sales.
+
+Sample Data:
+
+Table: sales
+
+sale_id	product_id	quantity	price_per_unit
+1	101		10		20.00
+2	102		5		50.00
+3	101		7		20.00
+4	103		2		100.00
+5	102		3		50.00
+
+
+Table: products
+
+product_id	product_name
+101		Product A
+102		Product B
+103		Product C
+
+
+Create and Insert data
+
+CREATE TABLE sales (
+    sale_id INT PRIMARY KEY,
+    product_id INT,
+    quantity INT,
+    price_per_unit DECIMAL(10, 2)
+);
+
+-- Create the 'products' table
+CREATE TABLE products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(255)
+);
+
+-- Insert data into the 'sales' table
+INSERT INTO sales (sale_id, product_id, quantity, price_per_unit) VALUES
+(1, 101, 10, 20.00),
+(2, 102, 5, 50.00),
+(3, 101, 7, 20.00),
+(4, 103, 2, 100.00),
+(5, 102, 3, 50.00);
+
+-- Insert data into the 'products' table
+INSERT INTO products (product_id, product_name) VALUES
+(101, 'Product A'),
+(102, 'Product B'),
+(103, 'Product C');
+
+
+ANS:
+SELECT p.product_name,
+       SUM(s.quantity * s.price_per_unit) AS total_sales
+FROM sales s
+JOIN products p ON s.product_id = p.product_id
+GROUP BY p.product_name
+ORDER BY total_sales DESC
+LIMIT 3;
+
+Explanation:
+
+SUM(s.quantity * s.price_per_unit) calculates the total sales amount for each product.
+JOIN is used to combine sales and products tables based on product_id.
+GROUP BY p.product_name groups the results by product name.
+ORDER BY total_sales DESC sorts the products by total sales in descending order.
+LIMIT 3 restricts the output to the top 3 products.
+
+
+
+
+
+
+
+
+4. Query: Retrieve Employees Who Have Not Made Any Sales This Year
+Objective: Find employees who have not recorded any sales in the current year.
+
+Sample Data:
+
+Table: employees
+
+employee_id	employee_name
+1		John Doe
+2		Jane Smith
+3		Alice Johnson
+
+Table: sales
+
+sale_id	employee_id	sale_date
+1	1		2024-01-15
+2	2		2024-02-20
+3	1		2024-03-10
+
+-- Create the 'employees' table
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(255)
+);
+
+-- Create the 'sales' table
+CREATE TABLE sales (
+    sale_id INT PRIMARY KEY,
+    employee_id INT,
+    sale_date DATE
+);
+
+-- Insert data into the 'employees' table
+INSERT INTO employees (employee_id, employee_name) VALUES
+(1, 'John Doe'),
+(2, 'Jane Smith'),
+(3, 'Alice Johnson');
+
+-- Insert data into the 'sales' table
+INSERT INTO sales (sale_id, employee_id, sale_date) VALUES
+(1, 1, '2024-01-15'),
+(2, 2, '2024-02-20'),
+(3, 1, '2024-03-10');
+
+
+ANS:
+
+SELECT e.employee_name
+FROM employees e
+LEFT JOIN sales s ON e.employee_id = s.employee_id 
+    AND YEAR(s.sale_date) = YEAR(CURDATE())
+WHERE s.sale_id IS NULL;
+
+Explanation:
+
+LEFT JOIN ensures that all employees are included in the result set, even those without matching sales records.
+YEAR(s.sale_date) = YEAR(CURDATE()) filters sales to the current year.
+WHERE s.sale_id IS NULL filters out employees who have sales records in the current year, thus leaving those without any sales.
+
+
+
+

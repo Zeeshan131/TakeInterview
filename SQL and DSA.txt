@@ -1,0 +1,170 @@
+SQL
+
+
+
+1:> Query
+Find the Name of any student in STUDENTS who scored higher than 75 Marks.
+Order your output by the last three characters of each name.
+If two or more students both have names ending in the same last three characters 
+(i.e.: Bobby, Robby, etc.), secondary sort them by ascending ID.
+
+STUDENTS Schema
+
+COLUMN		TYPE
+------------------------------
+ID		Integer
+Name		String
+Marks		Integer
+
+ANS:>
+SELECT NAME FROM STUDENTS WHERE MARKS > 75 ORDER BY RIGHT(NAME, 3), ID ASC;
+or
+SELECT NAME FROM STUDENTS WHERE MARKS > 75 ORDER BY SUBSTRING(NAME, LEN(NAME) - 2, 3), ID ASC;
+
+
+
+
+2:> Query
+Given the CITY and COUNTRY tables, query the sum of the populations of all cities where the CONTINENT is 'Asia'.
+
+Note: CITY.CountryCode and COUNTRY.Code are matching key columns.
+
+CITY Schema
+
+FIELD			TYPE
+--------------------------------------
+Id			Number
+Name			Varchar2(17)
+CountryCode		Varchar2(3)
+District		Varchar2(20)
+Population		Number
+
+COUNTRY Schema
+
+FIELD			TYPE
+--------------------------------------
+Code			Varchar2(3)
+Name			Varchar2(44)
+Continent		Varchar2(17)
+Region			Varchar2(25)
+SurfaceArea		Number
+Population		Number
+LifeExpectancy		Varchar2(4)
+LocalName		Varchar2(44)
+GovernmentForm		Varchar2(44)
+HeadOfState		Varchar2(32)
+Capital			Varchar2(10)
+
+ANS:>
+SELECT SUM(C.POPULATION) 
+FROM CITY C 
+JOIN COUNTRY CT ON C.COUNTRYCODE = CT.CODE 
+WHERE CT.CONTINENT = 'Asia';
+
+
+
+
+
+
+
+
+DSA
+
+
+
+1:> Description
+
+Given two arrays: a1[0..n-1] of size n and a2[0..m-1] of size m, where both arrays may contain duplicate elements.
+The task is to determine whether array a2 is a subset of array a1. It's important to note that both arrays can be sorted or unsorted.
+Additionally, each occurrence of a duplicate element within an array is considered as a separate element of the set.
+
+Example 1
+Input:
+a1[] = {11, 7, 1, 13, 21, 3, 7, 3}
+a2[] = {11, 3, 7, 1, 7}
+Output:
+Yes
+Explanation:
+a2[] is a subset of a1[]
+
+
+Example 2
+Input:
+a1[] = {10, 5, 2, 23, 19}
+a2[] = {19, 5, 3}
+Output:
+No
+Explanation:
+a2[] is not a subset of a1[]
+
+
+ANS:>
+
+using System;
+
+public class SubsetChecker
+{
+    public string IsSubset(long[] a1, long[] a2, long n, long m)
+    {
+        Array.Sort(a1);
+        Array.Sort(a2);
+        
+        int i = 0, j = 0;
+
+        while (i < n && j < m)
+        {
+            if (a1[i] == a2[j])
+            {
+                j++;
+            }
+            i++;
+        }
+
+        return j == m ? "Yes" : "No";
+    }
+}
+
+
+
+2:> Description
+
+Given a string, remove the vowels from the string.
+
+Example 1:
+Input: S = "what is your name ?"
+Output: wht s yr nm ?
+Explanation: Ignore vowels and print other
+characters
+
+Example 2:
+Input: S = "how are you?"
+Output: hw r y?
+Explanation: Ignore vowels and print other
+characters
+
+ANS:>
+
+public string RemoveVowels(string s)
+{
+	char[] cs = s.ToCharArray();
+        int l = cs.Length;
+        int j = 0;
+
+        for (int i = 0; i < l; i++)
+        {
+            if (!(cs[i] == 'a' || cs[i] == 'e' || cs[i] == 'i' || cs[i] == 'o' || cs[i] == 'u' ||
+                  cs[i] == 'A' || cs[i] == 'E' || cs[i] == 'I' || cs[i] == 'O' || cs[i] == 'U'))
+            {
+                cs[j] = cs[i];
+                j++;
+            }
+        }
+	return new string(cs, 0, j);
+}
+
+
+
+
+
+
+
