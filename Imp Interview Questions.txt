@@ -1,0 +1,170 @@
+1. HashTable vs Dictionary.				// Done
+
+Ans.: In C#, both Hashtable and Dictionary<TKey, TValue> are used to store key-value pairs, but they differ in several important ways. Here's a comparison between them:
+	Type Safety:
+Hashtable: It is not type-safe because it stores keys and values as objects. You need to cast them back to the appropriate type when retrieving.
+Dictionary<TKey, TValue>: It is type-safe. You define the types for both keys and values at compile time, which helps prevent errors.
+	Performance:
+Hashtable: Slightly slower because it uses boxing/unboxing for value types, and it's an older implementation (from .NET Framework 1.0).
+Dictionary<TKey, TValue>: More efficient because it’s a generic collection and avoids boxing/unboxing issues.
+	Null Handling:
+Hashtable: Can store null as a key or a value (although it is not recommended to use null as a key).
+Dictionary<TKey, TValue>: Can store null as a value (but not as a key if the key type is a value type).
+	Thread Safety:
+Hashtable: It is thread-safe for multiple threads reading and writing, but with some limitations (like blocking on write operations).
+Dictionary<TKey, TValue>: Not thread-safe for concurrent read/write operations. If you need thread-safety, you have to handle it explicitly (e.g., using locks or ConcurrentDictionary).
+
+
+
+2. Thread vs Async-Await				// Done
+
+
+
+3. IEnumerable vs IQueriable				// Done
+
+	Execution Type:
+IEnumerable: Executes in-memory (on the client side).
+IQueryable: Executes on the data source (usually a database) and supports deferred execution.
+	Deferred Execution:
+Both support deferred execution, but IQueryable is more optimized for querying large datasets remotely.
+	Usage:
+IEnumerable: Suitable for querying collections that are already loaded into memory.
+IQueryable: Suitable for building complex queries that are executed against a database (like LINQ to SQL or Entity Framework).
+	Performance:
+IEnumerable: Can lead to performance issues if working with large datasets in-memory.
+IQueryable: More efficient for large datasets since it translates queries into SQL, executing them on the database server.
+	Streaming Data:
+IEnumerable: Data is processed once it's fully loaded into memory.
+IQueryable: Streams data directly from the data source (e.g., a database) without fully loading it into memory.
+
+
+
+4. Connected and Disconnected Architecture		//
+
+Ans.:
+Connected Architecture:
+	Pros:
+Real-time communication: Information flows quickly and easily between parts.
+Efficiency: Changes or updates can be implemented instantly across the system.
+Centralized management: Easier to manage and monitor everything from one place.
+	Cons:
+Dependency: If one part fails, it could impact the entire system.
+Scalability issues: As the system grows, maintaining constant connections can become challenging and resource-intensive.
+Security risks: More connections can mean more potential vulnerabilities.
+
+Disconnected Architecture:
+	Pros:
+Independence: Parts can work on their own without depending on constant connections, increasing reliability.
+Scalability: It’s easier to expand since parts don’t need to be always connected.
+Resilience: A failure in one part won’t necessarily affect the others.
+	Cons:
+Delayed communication: Information exchange isn’t immediate, which can slow down decision-making.
+Complex sync: Keeping parts updated and in sync can require extra effort.
+More maintenance: Managing occasional connections between parts can be tricky.
+
+
+
+5. What is need of Singleton Pattern
+
+Ans.: The Singleton Pattern ensures a class has only one instance and provides a global access point to it. It's useful when you need to control access to shared resources, like configuration settings or database connections. It prevents multiple instances from being created, reducing overhead and potential conflicts. The pattern can also support lazy initialization, creating the instance only when needed. However, overuse can lead to issues with global state and make testing harder.
+
+
+
+6. Default delegates
+
+Ans.: The default delegate typically refers to the default value of a delegate, which is null. This is because a delegate can be set to null, and when it is, it doesn't point to any method.
+
+
+
+7. Singleton, Transient, Scoped
+
+Ans.: In .NET Core, Singleton, Transient, and Scoped are different service lifetimes:
+	Singleton: One instance for the entire application's lifetime.
+Use when you want to share a single instance across all requests (e.g., logging, caching).
+	Transient: A new instance every time it’s requested.
+Use for stateless services that don’t share state (e.g., lightweight operations).
+	Scoped: One instance per request (or scope).
+Use for services tied to a specific request (e.g., database context).
+
+
+
+8. Middlewares
+
+Ans.: In C#, middleware refers to components in an ASP.NET Core application that handle HTTP requests and responses. They are part of the request-processing pipeline and can perform tasks like authentication, logging, error handling, and routing. Middleware is executed in the order it's added to the pipeline, and each component can either pass control to the next or stop the request.
+
+
+
+9. Generic in C#.
+
+Ans.: In C#, generics allow you to define classes, methods, and data structures with a placeholder for data types, making your code more flexible and reusable while maintaining type safety.
+
+
+
+10. Function vs Stored Procedure in SQL Server.			// Done
+
+Ans.: In SQL Server, both functions and stored procedures are used to encapsulate SQL logic, but they have key differences in terms of their usage, behavior, and capabilities. Here's a comparison:
+	Side Effects:
+Function: Functions don’t change data. They only return values.
+Stored Procedure: Stored procedures can change data (insert, update, delete).
+	Usage in Queries:
+Function: You can use a function in a SELECT statement or other queries.
+Stored Procedure: Stored procedures can’t be used in a SELECT statement. You have to run them separately.
+	Transaction Control:
+Function: Functions cannot start or manage transactions.
+Stored Procedure: Stored procedures can manage transactions (start, commit, or roll back).
+	Error Handling:
+Function: Functions can’t handle errors like stored procedures can.
+Stored Procedure: Stored procedures can handle errors using TRY...CATCH.
+
+
+
+11. Can drop be rollback?					// Done
+
+Ans.: In SQL Server, a DROP command is permanent and cannot be rolled back. You can prevent errors using backups or DROP IF EXISTS checks. To restore, you would need to manually back up the object before dropping it.
+
+
+
+12. What is difference b/w view and CTE in sqlServer. Give me examples to find employee with 2nd highest salary in his department with using both.
+	Which is better for which scenario?
+
+Ans.: In SQL Server, both Views and Common Table Expressions (CTEs) are used to structure queries in a more readable and maintainable way. However, they are different in a few important ways.
+
+	View:
+A view is a virtual table stored in the database that contains the results of a SELECT query.
+It can be used as a regular table in other queries.
+A view is persistent; it exists in the database until explicitly dropped.
+You can create, drop, or alter views.
+Views are often used for encapsulating complex queries or aggregations.
+	CTE (Common Table Expression):
+A CTE is a temporary result set that is defined within the execution scope of a SELECT, INSERT, UPDATE, or DELETE statement.
+It exists only for the duration of the query it’s part of.
+CTEs are useful for creating more readable queries, especially for recursive queries or complex logic.
+
+
+Example of Finding Employee with 2nd Highest Salary in a Department:
+
+Using a View:
+	CREATE VIEW EmployeeSalaries AS
+	SELECT EmployeeID, DepartmentID, Salary
+	FROM Employees;
+
+	SELECT E1.EmployeeID, E1.DepartmentID, E1.Salary
+	FROM EmployeeSalaries E1
+	WHERE E1.Salary = (
+	    SELECT MAX(E2.Salary)
+	    FROM EmployeeSalaries E2
+	    WHERE E2.DepartmentID = E1.DepartmentID AND E2.Salary < E1.Salary
+	)
+
+Using a CTE:
+	WITH SalaryRank AS (
+	SELECT EmployeeID, DepartmentID, Salary,
+	RANK() OVER (PARTITION BY DepartmentID ORDER BY Salary DESC) AS SalaryRank
+	FROM Employees
+	)
+	SELECT EmployeeID, DepartmentID, Salary
+	FROM SalaryRank
+	WHERE SalaryRank = 2;
+
+
+
